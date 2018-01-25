@@ -343,10 +343,11 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      */
     @Override
     public void addService(Service service) {
-
+        // 为Server和Service建立关联关系
         service.setServer(this);
 
         synchronized (servicesLock) {
+            // 动态扩容，将当前Service加入
             Service results[] = new Service[services.length + 1];
             System.arraycopy(services, 0, results, 0, services.length);
             results[services.length] = service;
@@ -765,6 +766,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
         globalNamingResources.start();
 
         // Start our defined Services
+        // 循环启动所有的Service组件
         synchronized (servicesLock) {
             for (int i = 0; i < services.length; i++) {
                 services[i].start();
